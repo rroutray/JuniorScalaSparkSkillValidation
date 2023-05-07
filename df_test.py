@@ -1,12 +1,35 @@
-import pandas as pd
-# First DataFrame
-dataframe1 = pd.DataFrame({'emp_id': ['A1', 'A2', 'A3', 'A4'],'Name': ['Name1', 'Name2', 'Name3', 'Name4']})
-  
-# Second DataFrame
-dataframe2 = pd.DataFrame({'emp_id': ['B1', 'B2', 'B3', 'B4'],'Name': ['Name_1', 'Name_2', 'Name_3', 'Name_4']})
-  
-  
-frames = [dataframe1, dataframe2]
-  
-result = pd.concat(frames)
-print(result)
+from pyspark import SparkContext
+from pyspark.sql import SparkSession
+from pyspark.sql.types import *
+
+from pyspark_test import assert_pyspark_df_equal
+
+employee = [(1,"Sachin",-1,"2000","1","M",3000),(2,"Virat",1,"2011","2","M",4000),(3,"Ravinder",1,"2018","1","M",1000),(4,"Kapil",2,"1980","1","M",2000),(5,"Ravi",2,"1985","4","M",5000),(6,"Sunil",2,"1975","5","M",1000)]
+employeeColumns = ["emp_id","emp_name","superior_emp_id","year","emp_dept_id","gender","salary"]
+employeeDF = spark.createDataFrame(data=employee, schema = employeeColumns)
+employeeDF.show(truncate=False)
+
+department = [("Finance Dept",1),("Marketing Dept",2),("Sales Dept",3),("IT Dept",4),("HR Dept",5)]
+departmentColumns = ["department_name","dept_id"]
+departmentDF = spark.createDataFrame(data=department, schema = departmentColumns)
+departmentDF.show(truncate=False)
+
+dfJoin = employeeDF.join(departmentDF,employeeDF.emp_dept_id ==  departmentDF.dept_id,"inner")
+dfJoin.show()
+
+dfLeftJoin = employeeDF.join(departmentDF,employeeDF.emp_dept_id ==  departmentDF.dept_id,"left")
+dfLeftJoin.show()
+
+dfFinal = employeeDF.join(departmentDF,employeeDF.emp_dept_id == departmentDF.dept_id,"inner").join(dfJoin,employeeDF.emp_dept_id == dfJoin.emp_dept_id,"inner")
+dfFinal.show()
+
+employeeDF.createOrReplaceTempView("EMPLOYEE")
+departmentDF.createOrReplaceTempView("DEPARTMENT")
+dfFinal.createOrReplaceTempView("FINAL")
+
+joinDF = spark.sql("select * from EMPLOYEE e INNER JOIN DEPARTMENT d ON e.emp_dept_id == d.dept_id").show(truncate=False)
+FinalDF = spark.sql("select * from FINAL").show(truncate=False)
+
+assert_pyspark_df_equal(FinalDF, dfFinal)
+assert_pyspark_df_equaljoinDF, dfJoin)
+assert_pyspark_df_equaljoinDF, dfLeftJoin)
