@@ -31,5 +31,5 @@ joinDF = spark.sql("select * from EMPLOYEE e INNER JOIN DEPARTMENT d ON e.emp_de
 FinalDF = spark.sql("select * from FINAL").show(truncate=False)
 
 assert_pyspark_df_equal(FinalDF, dfFinal)
-assert_pyspark_df_equaljoinDF, dfJoin)
-assert_pyspark_df_equaljoinDF, dfLeftJoin)
+assert_pyspark_df_equal(joinDF, dfJoin)
+assert_pyspark_df_equal(joinDF, dfLeftJoin)
