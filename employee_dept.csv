@@ -1,0 +1,7 @@
+emp_id,emp_name,superior_emp_id,year,emp_dept_id,gender,salary,bonus_per,bonus,grade,dept_id,department_name
+6,Sunil,2,1975,5,M,1000,3,3000,A,5,HR Dept
+3,Ravinder,1,2018,1,M,1000,3,3000,A,1,Finance Dept
+1,Sachin,-1,2000,1,M,3000,3,9000,A,1,Finance Dept
+4,Kapil,2,1980,1,M,2000,3,6000,A,1,Finance Dept
+5,Ravi,2,1985,4,M,5000,3,15000,B,4,IT Dept
+2,Virat,1,2011,2,M,4000,3,12000,A,2,Marketing Dept
