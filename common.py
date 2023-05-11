@@ -40,3 +40,10 @@ def create_expected_df():
    expected_columns = ["emp_id","emp_name","superior_emp_id","year","emp_dept_id","gender","salary","bonus_per","bonus","grade","dept_id","department_name"]
    expected_df = spark_session.createDataFrame(data=expected_join_data, schema = expected_columns)
 
+employee_df = create_emp_df()
+department_df = create_dept_df()
+expected_df = create_expected_df()
+
+# 2: Created temporary table/views (employee & department) for SQL query
+employee_df.createOrReplaceTempView("employee")
+employee_df.createOrReplaceTempView("department")
